@@ -7,10 +7,20 @@ import { z } from "zod";
 
 const SEED_LOCATIONS = [
   {
+    name: "Rectorate - University of Pardubice",
+    category: "other",
+    description: "The main administrative center of the university, housing the Rector's office and central administration.",
+    address: "Studentská 95, 532 10 Pardubice",
+    latitude: 50.0369,
+    longitude: 15.7691,
+    websiteUrl: "https://www.upce.cz/en/university/representation.html",
+    slug: "rectorate"
+  },
+  {
     name: "Faculty of Chemical Technology",
     category: "faculty",
     description: "The largest faculty, known for high-quality chemistry education and research. Located at the heart of the campus.",
-    address: "Studentská 95, 532 10 Pardubice",
+    address: "Studentská 573, 530 09 Pardubice",
     latitude: 50.0494,
     longitude: 15.7663,
     websiteUrl: "https://fcht.upce.cz/en",
@@ -46,23 +56,23 @@ const SEED_LOCATIONS = [
     websiteUrl: "https://ff.upce.cz/en",
     slug: "ff"
   },
-   {
+  {
     name: "Faculty of Health Studies",
     category: "faculty",
     description: "Educates future nurses, midwives, and health specialists. Located slightly off the main campus quad.",
     address: "Průmyslová 395, 532 10 Pardubice",
     latitude: 50.0465,
-    longitude: 15.7950, 
+    longitude: 15.7950,
     websiteUrl: "https://fzs.upce.cz/en",
     slug: "fzs"
   },
-   {
+  {
     name: "Faculty of Electrical Engineering and Informatics",
     category: "faculty",
     description: "Focuses on IT, automation, and electronics. Key for tech students.",
-    address: "Studentská 95, 532 10 Pardubice",
-    latitude: 50.0510,
-    longitude: 15.7640,
+    address: "nám. Čs. legií 565, 530 02 Pardubice",
+    latitude: 50.0357,
+    longitude: 15.7765,
     websiteUrl: "https://fei.upce.cz/en",
     slug: "fei"
   },
@@ -86,7 +96,7 @@ const SEED_LOCATIONS = [
     websiteUrl: "https://www.upce.cz/en/accommodation",
     slug: "dorms"
   },
-   {
+  {
     name: "University Dining Hall (Menza)",
     category: "dining",
     description: "Affordable meals for students. Serves traditional Czech cuisine and international options.",
@@ -109,14 +119,13 @@ const SEED_LOCATIONS = [
 ];
 
 async function seedDatabase() {
-  const existing = await storage.getLocations();
-  if (existing.length === 0) {
-    console.log("Seeding database with initial locations...");
-    for (const loc of SEED_LOCATIONS) {
-      await storage.createLocation(loc);
-    }
-    console.log("Seeding complete.");
+  console.log("Seeding database with updated locations...");
+  // Clear existing to ensure fresh seed with correct data
+  await db.delete(locations);
+  for (const loc of SEED_LOCATIONS) {
+    await storage.createLocation(loc);
   }
+  console.log("Seeding complete.");
 }
 
 export async function registerRoutes(
