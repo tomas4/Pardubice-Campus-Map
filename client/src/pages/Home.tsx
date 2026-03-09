@@ -27,7 +27,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<LocationCategory | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(typeof window !== "undefined" ? window.innerWidth >= 768 : false);
   const [mapCenter, setMapCenter] = useState<[number, number]>([50.0495, 15.766]);
   const [mapZoom, setMapZoom] = useState(15);
 
@@ -65,12 +65,13 @@ export default function Home() {
     <div className="flex h-screen w-full bg-background overflow-hidden relative">
       
       {/* Mobile Header / Sidebar Toggle */}
-      <div className="md:hidden absolute top-4 left-4 z-[1000]">
+      <div className="absolute top-4 left-4 z-[1000]">
         <Button 
           variant="secondary" 
           size="icon" 
           className="rounded-full shadow-lg h-12 w-12 bg-background/90 backdrop-blur-md border border-border/50"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          data-testid="button-toggle-menu"
         >
           {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
@@ -158,29 +159,51 @@ export default function Home() {
 
       {/* Map Area */}
       <main className="flex-1 relative h-full w-full">
-        {/* Floating Controls */}
-        <div className="absolute top-4 right-4 z-[800] flex flex-col gap-2">
+        {/* Quick Navigation Buttons */}
+        <div className="absolute top-20 right-4 z-[800] flex flex-col gap-2 sm:gap-3">
           <Button
             variant="default"
             size="sm"
-            onClick={handleLitomyslClick}
-            className="shadow-xl rounded-full px-4 bg-white hover:bg-white/90 text-primary border border-primary/20"
-          >
-            <Globe className="w-4 h-4 mr-2" />
-            Show Litomyšl Campus
-          </Button>
-          
-          <Button
-            variant="secondary"
-            size="icon"
             onClick={() => {
               setMapCenter([50.0495, 15.766]);
               setMapZoom(15);
+              setSelectedCategory(null);
             }}
-            className="shadow-xl rounded-full bg-white hover:bg-white/90 text-foreground"
-            title="Reset to Pardubice Campus"
+            className="shadow-xl rounded-full px-4 sm:px-6 bg-white hover:bg-white/90 text-primary border border-primary/20 font-semibold text-xs sm:text-sm whitespace-nowrap"
+            data-testid="button-main-campus"
           >
-            <LocateFixed className="w-5 h-5" />
+            <LocateFixed className="w-4 h-4 mr-2 sm:mr-2" />
+            Main Campus
+          </Button>
+          
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => {
+              setMapCenter([49.8728, 16.3144]);
+              setMapZoom(16);
+              setSelectedCategory("faculty");
+            }}
+            className="shadow-xl rounded-full px-4 sm:px-6 bg-white hover:bg-white/90 text-primary border border-primary/20 font-semibold text-xs sm:text-sm whitespace-nowrap"
+            data-testid="button-litomysl"
+          >
+            <Globe className="w-4 h-4 mr-2 sm:mr-2" />
+            Litomyšl Campus
+          </Button>
+
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => {
+              setMapCenter([50.0465, 15.7950]);
+              setMapZoom(16);
+              setSelectedCategory("faculty");
+            }}
+            className="shadow-xl rounded-full px-4 sm:px-6 bg-white hover:bg-white/90 text-primary border border-primary/20 font-semibold text-xs sm:text-sm whitespace-nowrap"
+            data-testid="button-health-studies"
+          >
+            <LocateFixed className="w-4 h-4 mr-2 sm:mr-2" />
+            Health Studies
           </Button>
         </div>
 
